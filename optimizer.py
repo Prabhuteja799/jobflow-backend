@@ -11,7 +11,7 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from config import OPENAI_API_KEY, OPTIMIZER_MODEL, FIXED_METRICS
+from config import OPENAI_API_KEY, OPTIMIZER_MODEL  # , FIXED_METRICS
 
 log    = logging.getLogger(__name__)
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -60,45 +60,45 @@ def optimize_resume(resume_text: str, jd_analysis: dict,
     # Case 3: "Professional Summary": { ... }              ← old key fallback
 
     paragraph = ""
-    ai_metrics = []
+    # ai_metrics = []
 
     if "summary" in data:
         s = data["summary"]
         if isinstance(s, dict):
             paragraph  = s.get("paragraph", "")
-            ai_metrics = s.get("metrics",   [])
+            # ai_metrics = s.get("metrics",   [])
         elif isinstance(s, str):
             paragraph  = s
-            ai_metrics = []
+            # ai_metrics = []
 
     elif "Professional Summary" in data:
         ps = data.pop("Professional Summary")
         if isinstance(ps, dict):
             paragraph  = ps.get("paragraph", "")
-            ai_metrics = ps.get("metrics",   [])
+            # ai_metrics = ps.get("metrics",   [])
         else:
             paragraph  = str(ps)
-            ai_metrics = []
+            # ai_metrics = []
 
     elif "summary_paragraph" in data:
         paragraph  = data.pop("summary_paragraph", "")
-        ai_metrics = data.pop("summary_metrics",   [])
+        # ai_metrics = data.pop("summary_metrics",   [])
 
     # ── Always inject fixed metrics (AI returns [] per instructions) ──
-    extra_metrics = [
-        m for m in (ai_metrics or [])
-        if isinstance(m, str) and m.strip()
-        and not any(
-            f.lower()[:20] == m.lower()[:20]
-            for f in FIXED_METRICS
-        )
-    ]
-    all_metrics = FIXED_METRICS + extra_metrics
+    # extra_metrics = [
+    #     m for m in (ai_metrics or [])
+    #     if isinstance(m, str) and m.strip()
+    #     and not any(
+    #         f.lower()[:20] == m.lower()[:20]
+    #         for f in FIXED_METRICS
+    #     )
+    # ]
+    # all_metrics = FIXED_METRICS + extra_metrics
 
     # ── Write back nested structure for latex_pdf_generator ──────
     data["summary"] = {
         "paragraph": paragraph,
-        "metrics":   all_metrics,
+        "metrics":   [],
     }
 
     # Remove flat keys if AI left them behind

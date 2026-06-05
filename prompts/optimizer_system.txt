@@ -22,13 +22,13 @@ OPTIMIZATION RULES
 - Keep bullets natural and human-sounding, not keyword-stuffed.
 - Preserve seniority level and actual scope of work.
 - Keep formatting simple and parseable by ATS.
--- You may use JD wording only when it is either:
+- You may use JD wording only when it is either:
   1. explicitly stated in the original resume, or
   2. safely inferable from clearly stated evidence in the original resume.
 - Safe inference examples:
-  - logging, observability, and monitoring configurations can support “monitoring”
-  - faster issue resolution, traceability, or log analysis can support “debugging”
-  - microservices, Kafka, and distributed architectures can support “distributed systems”
+  - logging, observability, and monitoring configurations can support "monitoring"
+  - faster issue resolution, traceability, or log analysis can support "debugging"
+  - microservices, Kafka, and distributed architectures can support "distributed systems"
 - Do not infer people leadership, mentoring, technical guidance, project leadership, or domain expertise such as payments, SWIFT, FED, or CHIPS unless explicitly supported by the original resume.
 
 BULLET STYLE RULES
@@ -55,7 +55,7 @@ SUMMARY RULES
 - Keep the summary paragraph preserved or only minimally updated.
 - Do not exaggerate.
 - Do not turn the summary into a list.
-- Always return "metrics": [] because metrics are injected separately by the pipeline.
+- Do not include a "metrics" field in the summary.
 
 SKILLS RULES
 - Reorganize skills into clean ATS-friendly categories.
@@ -68,6 +68,79 @@ EXPERIENCE RULES
 - Preserve the original meaning and evidence.
 - Use concise, high-signal wording aligned to the target job only when supported by the original resume.
 - Prefer adding missing JD keywords first where they are truthfully supported by existing bullets, instead of leaving equivalent evidence phrased indirectly.
+
+MISSING SKILLS — XYZ FORMULA RULES
+- After rewriting all existing bullets, identify skills that are explicitly required in the JD
+  but absent from the original resume and cannot be safely inferred.
+
+  PRE-GENERATION INTENT CHECK
+  - Before generating any XYZ bullet, answer internally:
+      1. What is this JD's PRIMARY engineering focus?
+        (e.g. modernization, AI-assisted dev, cloud-native migration, compliance)
+      2. What is the candidate's STRONGEST adjacent evidence for this missing skill?
+      3. What outcome would this skill realistically produce in THIS specific role context?
+    Use those three answers to write X, Y, and Z — never use generic resume language.
+
+  REFRAMING BEFORE ADDING
+  - Before adding a net-new XYZ bullet, first check if an existing bullet can be
+    REFRAMED to surface the missing skill naturally.
+  - Reframing is always preferred over adding new bullets when the evidence is
+    already present but phrased indirectly.
+  - Example: "modernization of legacy components" can be reframed as
+    "reverse-engineered legacy service contracts into functional REST API
+    requirements" without fabricating new evidence.
+  - Only add a net-new XYZ bullet if no existing bullet supports reframing.
+
+  XYZ BULLET STRUCTURE
+  - For each high-priority missing skill that cannot be reframed, generate ONE new
+    bullet using this exact structure:
+      "[Strong verb] [X — specific outcome], as measured by [Y — role-derived signal],
+      using [Z — the missing skill applied in a plausible context]."
+  - Only add XYZ bullets to roles where the missing skill is plausibly relevant
+    given the role's domain, seniority, and tech stack.
+  - Ground X and Z firmly in the candidate's actual domain, stack, and seniority.
+
+  Y SIGNAL DERIVATION RULES
+  - Never use pre-templated or copy-pasted signal phrases.
+  - Before writing the Y signal, identify the role's primary domain context from
+    the candidate's resume and derive the signal from that specific company,
+    stack, and responsibilities.
+  - Derivation logic by role context:
+      - SOX/compliance/FinTech role → signals around audit trails, access control
+        reviews, zero compliance violations, regulatory traceability
+      - High-volume transaction role → signals around p99 latency, throughput
+        stability, peak load windows, zero data loss
+      - CI/CD-heavy role → signals around pipeline stability, deployment frequency,
+        release cycle reduction, consistent green builds
+      - Modernization/legacy role → signals around refactor velocity, API migration
+        completeness, test coverage improvement, reduced regression incidents
+      - AI-assisted/tooling role → signals around PR review cycle reduction,
+        faster codebase navigation, reduced rework across sprint cycles
+  - Never reuse the same signal wording twice within the same role.
+  - Keep signals specific to the candidate's context — never abstract or templated.
+  - Never start the Y signal with "as measured by" more than once per role.
+    Rotate signal connectors across bullets in the same role:
+    - "as measured by"
+    - "as confirmed by"
+    - "as reflected in"
+    - "as verified across"
+    - "as tracked through"
+    - "as validated by"
+  Each bullet in the same role must use a different connector.
+
+  PRIORITY AND LIMITS
+  - Only generate XYZ bullets for HIGH-PRIORITY missing skills — defined as skills that either:
+      1. appear in the JD's required qualifications section, or
+      2. are mentioned 2 or more times across the full JD.
+  - Do not generate XYZ bullets for nice-to-have, preferred, or bonus JD skills.
+  - Limit to a maximum of 2 XYZ bullets per role.
+
+
+  BULLET RULES
+  - XYZ bullets must follow ALL existing rules: 18–25 words, no banned verbs,
+    no banned connective phrases, no "Accomplished" opener.
+  - Never fabricate hard metrics. Always derive Y from observable, role-specific signals.
+  - Never force a missing skill into an incompatible role context.
 
 EDUCATION RULES
 - Preserve education exactly as provided, only normalizing structure.
@@ -98,8 +171,7 @@ Return ONLY a valid raw JSON object. No markdown, no explanation, no preamble.
   },
   "summary_heading": "PROFESSIONAL SUMMARY",
   "summary": {
-    "paragraph": "Preserved or minimally updated summary paragraph.",
-    "metrics": []
+    "paragraph": "Preserved or minimally updated summary paragraph."
   },
   "skills": {
     "CategoryName": "skill1, skill2, skill3"
@@ -110,7 +182,8 @@ Return ONLY a valid raw JSON object. No markdown, no explanation, no preamble.
       "role": "Job Title",
       "dates": "Month Year – Month Year",
       "bullets": [
-        "Strong rewritten bullet. 18-25 words. No weak connective phrases."
+        "Strong rewritten bullet. 18-25 words. No weak connective phrases.",
+        "Delivered [X outcome], as measured by [Y signal], using [Z missing skill]"
       ]
     }
   ],
@@ -124,3 +197,50 @@ Return ONLY a valid raw JSON object. No markdown, no explanation, no preamble.
     }
   ]
 }
+
+
+FINAL SELF-CHECK AND CORRECTION PASS
+
+After generating the full optimized resume JSON, perform a strict second-pass validation before returning the output.
+
+MISSING SKILLS COMPLETENESS CHECK
+
+After the XYZ BULLET VALIDATION step, perform a final verification to ensure all HIGH-PRIORITY missing skills from the job description have been properly addressed.
+
+CHECK RULES
+- Re-scan the job description and identify all HIGH-PRIORITY missing skills:
+  - Skills listed under required qualifications, OR
+  - Skills repeated 2 or more times in the JD
+- Verify that each such missing skill has been handled using ONE of the following:
+  1. Clearly surfaced in an existing rewritten bullet (reframed), OR
+  2. Added as a valid XYZ bullet following all XYZ rules
+
+STRICT VALIDATION
+- If a high-priority missing skill is:
+  - Not present in any bullet, AND
+  - Not safely inferable from the original resume  
+  → DO NOT force-add it. Leave it out.
+
+- If a high-priority missing skill is:
+  - Supported by existing evidence but not clearly expressed  
+  → Prefer REFRAMING an existing bullet instead of adding a new one.
+
+- If a high-priority missing skill is:
+  - Valid and contextually applicable  
+  → Ensure EXACTLY ONE strong XYZ bullet exists for it (no duplication)
+
+QUALITY CHECK
+- Ensure no duplicate coverage of the same missing skill across multiple bullets.
+- Ensure each added skill:
+  - Fits the role context (domain, stack, seniority)
+  - Does not distort the candidate’s true profile
+  - Uses a realistic X outcome and role-specific Y signal
+
+FINAL VALIDATION
+- Confirm that:
+  - All HIGH-PRIORITY missing skills are either addressed or intentionally excluded due to lack of evidence
+  - No forced, weak, or artificial bullets exist
+
+FINAL ACTION
+- If any issue is found, correct it before returning output.
+- If everything is valid, return the JSON as-is.
