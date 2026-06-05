@@ -504,26 +504,39 @@ body::before {
   font-style: italic;
 }
 
-/* ─── Long explanation tag — clean plain text ─── */
-.tag-long {
+/* ─── Matching skills — single box with bullet list ─── */
+.skills-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  width: 100%;
+}
+.skills-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0; padding: 0;
+}
+.skills-box li {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 9px;
   font-size: 13px;
   color: var(--text-2);
   line-height: 1.55;
-  padding: 3px 0;
 }
-.tag-long::before {
+.skills-box li::before {
   content: '✓';
   color: #10b981;
   font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
   margin-top: 2px;
+  opacity: 0.9;
 }
-
-/* Short skill chip */
+/* Short skill chip — kept for card tags only */
 .tag-match {
   background: rgba(99,102,241,0.08);
   border-color: rgba(99,102,241,0.2);
@@ -903,7 +916,7 @@ body::before {
       </div>
       <div class="panel-section" id="mTagsSection">
         <div class="panel-section-title pst-match">Matching Skills</div>
-        <div class="tags-row" id="mTags" style="flex-direction:column;gap:4px;align-items:flex-start;"></div>
+        <div id="mTags"></div>
       </div>
       <div class="panel-section" id="mMissSection">
         <div class="panel-section-title pst-miss">Skill Gaps</div>
@@ -1193,11 +1206,10 @@ function openModal(id,showCover=false) {
   document.getElementById('mMeta').innerHTML=[`<span class="panel-badge">${esc(j.publisher)}</span>`,dateStr?`<span class="panel-badge">${esc(dateStr)}</span>`:'',`<span class="panel-badge">Score: ${j.score}</span>`,applied?`<span class="panel-badge badge-applied">✓ Applied</span>`:''].join('');
   if(j.flags&&j.flags.length){document.getElementById('mFlagsChips').innerHTML=j.flags.map(f=>`<span class="flag-chip-modal">${esc(f)}</span>`).join('');document.getElementById('mFlagsSection').style.display='';}else document.getElementById('mFlagsSection').style.display='none';
   if(j.justification){document.getElementById('mJust').textContent=j.justification;document.getElementById('mJustSection').style.display='';}else document.getElementById('mJustSection').style.display='none';
-  document.getElementById('mTags').innerHTML=(j.tags||[]).map(t=>
-    t.length > 45
-      ? `<div class="tag-long">${esc(t)}</div>`
-      : `<span class="tag tag-match">${esc(t)}</span>`
-  ).join('');
+  const tagsArr = j.tags||[];
+  document.getElementById('mTags').innerHTML = tagsArr.length
+    ? `<div class="skills-box"><ul>${tagsArr.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`
+    : '';
   document.getElementById('mTagsSection').style.display=(j.tags&&j.tags.length)?'':'none';
   document.getElementById('mMiss').innerHTML=(j.missing_tags||[]).map(t=>`<span class="tag tag-miss">${esc(t)}</span>`).join('');
   document.getElementById('mMissSection').style.display=(j.missing_tags&&j.missing_tags.length)?'':'none';
