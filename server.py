@@ -9,6 +9,7 @@ Endpoint:
   Returns: { resume_url }
 """
 
+import base64
 import logging
 import re
 
@@ -51,8 +52,9 @@ class GenerateRequest(BaseModel):
 
 
 class GenerateResponse(BaseModel):
-    resume_url: str
-    file_name:  str
+    resume_url:  str
+    file_name:   str
+    pdf_base64:  str = ""
 
 
 _FILLER_WORDS = {
@@ -105,7 +107,11 @@ async def generate_resume(req: GenerateRequest):
             write_resume_link(SPREADSHEET_ID, SHEET_NAME, req.job_id, drive_link)
 
         log.info("  ✅ Done: %s", drive_link)
-        return GenerateResponse(resume_url=drive_link, file_name=file_name)
+        return GenerateResponse(
+            resume_url=drive_link,
+            file_name=file_name,
+            pdf_base64=base64.b64encode(pdf_bytes).decode(),
+        )
 
     except Exception as e:
         log.error("  ❌ Failed: %s", e)
