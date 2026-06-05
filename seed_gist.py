@@ -10,7 +10,7 @@ Usage:
 """
 
 import json, re, requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -169,6 +169,25 @@ def parse_date(val):
 # ──────────────────────────────────────────────────────────────
 
 
+CUTOFF_DAYS = 30  # drop jobs older than this many days
+
+
+def is_recent(job: dict, cutoff: datetime) -> bool:
+    """Return True if the job has a date within the cutoff window, or no date at all."""
+    for field in ('last_checked', 'posted_dt'):
+        raw = job.get(field)
+        if not raw:
+            continue
+        try:
+            dt = datetime.fromisoformat(str(raw))
+            # strip tz info so comparison is naive vs naive
+            dt = dt.replace(tzinfo=None)
+            return dt >= cutoff
+        except Exception:
+            continue
+    return True  # no parseable date → keep it
+
+
 def main():
     print('🔑  Authenticating with Google Sheets...')
     service = get_sheets_service()
@@ -180,7 +199,11 @@ def main():
         print(f'  ✓  {sheet}: {len(batch)} jobs')
         jobs += batch
 
-    print(f'\n📦  Total: {len(jobs)} jobs')
+    total_before = len(jobs)
+    cutoff = datetime.now() - timedelta(days=CUTOFF_DAYS)
+    jobs = [j for j in jobs if is_recent(j, cutoff)]
+    dropped = total_before - len(jobs)
+    print(f'\n📦  Total: {total_before} → {len(jobs)} jobs after dropping {dropped} older than {CUTOFF_DAYS} days')
     content = json.dumps(jobs, separators=(',', ':'))
     print(f'📏  Size: {len(content)/1024:.1f} KB')
 

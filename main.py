@@ -87,7 +87,7 @@ def main():
 
             # Call pdf-service to generate PDF
             log.info("  [3/5] Generating PDF...")
-            file_name = f"{short_name(company)}_{short_name(position, max_words=3)}.pdf"
+            file_name = f"{short_name(position, max_words=3)}_{short_name(company, max_words=1)}.pdf"
             pdf_bytes = generate_pdf(resume_data, file_name)
 
             # Upload to Google Drive (replace if exists)
