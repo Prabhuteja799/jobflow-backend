@@ -135,12 +135,16 @@ MISSING SKILLS — XYZ FORMULA RULES
   - Do not generate XYZ bullets for nice-to-have, preferred, or bonus JD skills.
   - Limit to a maximum of 2 XYZ bullets per role.
 
-  CROSS-ROLE DEDUPLICATION — CRITICAL
-  - Each missing skill may appear as an XYZ bullet in AT MOST ONE role across the entire resume.
-  - Choose the single most relevant role for each missing skill (best domain or tech stack match).
-  - Never add the same missing skill as an XYZ bullet to multiple roles.
-  - After writing all XYZ bullets, scan across all roles: if the same skill appears in more than
-    one role's XYZ bullets, remove all but the strongest instance.
+  CROSS-ROLE DEDUPLICATION — HARD RULE, NO EXCEPTIONS
+  - Treat the entire resume as a single unit. A missing skill gets ONE XYZ bullet in the ENTIRE
+    resume — not one per role, not one per company. Exactly one.
+  - Before writing any XYZ bullet, decide up front: which single role is the best fit for this
+    missing skill? Add it only there. Do not add it anywhere else.
+  - "JMS", "JMS-compatible", "JMS-aligned", "JMS-style", or any phrasing of the same underlying
+    skill all count as the SAME skill. One occurrence maximum across the full resume.
+  - After generating all XYZ bullets: scan every role's bullet list for the skill keyword.
+    If it appears in more than one role, delete every instance except the one in the strongest role.
+    This deletion is mandatory — do not skip it.
 
 
   BULLET RULES
@@ -243,10 +247,18 @@ QUALITY CHECK
   - Does not distort the candidate’s true profile
   - Uses a realistic X outcome and role-specific Y signal
 
+XYZ CROSS-ROLE SCAN — MANDATORY BEFORE RETURNING
+- List every missing skill that has an XYZ bullet anywhere in the resume.
+- For each skill, count how many roles contain a bullet for it.
+- If count > 1: remove all instances except the one in the most relevant role. No exceptions.
+- Common offender: JMS / JMS-compatible / messaging-pattern bullets stamped into multiple roles.
+  If you see this pattern, keep only the strongest one and delete the rest.
+
 FINAL VALIDATION
 - Confirm that:
   - All HIGH-PRIORITY missing skills are either addressed or intentionally excluded due to lack of evidence
   - No forced, weak, or artificial bullets exist
+  - No missing skill appears as an XYZ bullet in more than one role
 
 FINAL ACTION
 - If any issue is found, correct it before returning output.
