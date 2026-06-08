@@ -3,19 +3,18 @@ server.py — FastAPI server that the website calls to generate a single resume.
 Run: python server.py
 Listens on http://localhost:8000
 
-Endpoint:
-  POST /generate-resume
-  Body: { job_id, company, position, job_desc }
-  Returns: { resume_url }
+Endpoints:
+  POST /generate-resume   Body: { job_id, company, position, job_desc }
+  GET  /download-pdf      Returns last-generated PDF as attachment
 """
 
-import base64
 import logging
 import re
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from config          import OUTPUT_FOLDER_ID
@@ -52,9 +51,8 @@ class GenerateRequest(BaseModel):
 
 
 class GenerateResponse(BaseModel):
-    resume_url:  str
-    file_name:   str
-    pdf_base64:  str = ""
+    resume_url: str
+    file_name:  str
 
 
 _FILLER_WORDS = {
@@ -72,9 +70,27 @@ def short_name(name: str, max_words: int = 2) -> str:
     return slug or re.sub(r"\s+", "_", clean)[:20]
 
 
+# ── Last-generated PDF cache (serves GET /download-pdf) ──────────
+_last_pdf: dict = {"bytes": b"", "filename": "resume.pdf"}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/download-pdf")
+def download_pdf():
+    if not _last_pdf["bytes"]:
+        raise HTTPException(status_code=404, detail="No PDF ready — generate a resume first.")
+    return Response(
+        content=_last_pdf["bytes"],
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{_last_pdf["filename"]}"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 @app.post("/generate-resume", response_model=GenerateResponse)
@@ -98,6 +114,10 @@ async def generate_resume(req: GenerateRequest):
         file_name = f"{short_name(req.position, max_words=3)}_{short_name(req.company, max_words=1)}.pdf"
         pdf_bytes = generate_pdf(resume_data, file_name)
 
+        # Cache PDF bytes so GET /download-pdf can serve them
+        _last_pdf["bytes"]    = pdf_bytes
+        _last_pdf["filename"] = file_name
+
         # Upload to Google Drive
         log.info("  [4/4] Uploading to Drive...")
         drive_link = upload_pdf(pdf_bytes, file_name, OUTPUT_FOLDER_ID)
@@ -110,7 +130,6 @@ async def generate_resume(req: GenerateRequest):
         return GenerateResponse(
             resume_url=drive_link,
             file_name=file_name,
-            pdf_base64=base64.b64encode(pdf_bytes).decode(),
         )
 
     except Exception as e:

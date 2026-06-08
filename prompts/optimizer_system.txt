@@ -135,6 +135,13 @@ MISSING SKILLS — XYZ FORMULA RULES
   - Do not generate XYZ bullets for nice-to-have, preferred, or bonus JD skills.
   - Limit to a maximum of 2 XYZ bullets per role.
 
+  CROSS-ROLE DEDUPLICATION — CRITICAL
+  - Each missing skill may appear as an XYZ bullet in AT MOST ONE role across the entire resume.
+  - Choose the single most relevant role for each missing skill (best domain or tech stack match).
+  - Never add the same missing skill as an XYZ bullet to multiple roles.
+  - After writing all XYZ bullets, scan across all roles: if the same skill appears in more than
+    one role's XYZ bullets, remove all but the strongest instance.
+
 
   BULLET RULES
   - XYZ bullets must follow ALL existing rules: 18–25 words, no banned verbs,

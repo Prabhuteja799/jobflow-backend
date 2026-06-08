@@ -1240,18 +1240,8 @@ function closeModal() { document.getElementById('panelOverlay').classList.remove
 const PIPELINE_API='http://localhost:8000';
 let jdTargetJobId=null,jdSourcePanel=false,jdManualMode=false;
 
-function downloadPdf(base64Data, fileName) {
-  if (!base64Data) return;
-  const bytes = atob(base64Data);
-  const arr = new Uint8Array(bytes.length);
-  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
-  const blob = new Blob([arr], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = fileName || 'resume.pdf';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+function downloadPdf() {
+  window.location.href = `${PIPELINE_API}/download-pdf`;
 }
 
 async function autoGenResume(jobId,btn) {
@@ -1261,7 +1251,7 @@ async function autoGenResume(jobId,btn) {
     const res=await fetch(`${PIPELINE_API}/generate-resume`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job_id:jobId,company:j.company||'',position:j.position||j.title||'',job_desc:j.job_desc})});
     if(!res.ok){const err=await res.json().catch(()=>({}));throw new Error(err.detail||`Server error ${res.status}`);}
     const data=await res.json(); j.ats_resume=data.resume_url; jobMap[jobId]=j;
-    downloadPdf(data.pdf_base64, data.file_name);
+    downloadPdf();
     showToast('✅ Resume downloaded!'); render();
     if(activeJobId===jobId){document.getElementById('mResumeLink').href=data.resume_url;document.getElementById('mResumeLink').style.display='';document.getElementById('mResumeGenBtn').style.display='none';}
   } catch(err){showToast(`❌ ${err.message}`);btn.classList.remove('generating');btn.textContent='✨ Resume';}
@@ -1309,7 +1299,7 @@ async function submitJdGenerate() {
     const res=await fetch(`${PIPELINE_API}/generate-resume`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job_id:jobId,company,position,job_desc:jobDesc})});
     if(!res.ok){const err=await res.json().catch(()=>({}));throw new Error(err.detail||`Server error ${res.status}`);}
     const data=await res.json(),driveLink=data.resume_url;
-    downloadPdf(data.pdf_base64, data.file_name);
+    downloadPdf();
     if(jdManualMode){
       document.getElementById('jdStatus').innerHTML=`✅ Downloaded! <a href="${driveLink}" target="_blank" rel="noopener" style="color:#a5b4fc;font-weight:600;text-decoration:underline">Also saved to Drive ↗</a>`;
       document.getElementById('jdStatus').className='jd-status success';_resetJdBtn();showToast('✅ Resume downloaded!');
