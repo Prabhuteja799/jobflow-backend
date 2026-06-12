@@ -1138,6 +1138,7 @@ function render() {
     const missHtml=(j.missing_tags||[]).map(t=>`<span class="tag tag-miss">− ${esc(t)}</span>`).join('');
     const flagsHtml=(j.flags||[]).map(f=>`<span class="flag-chip">${esc(f)}</span>`).join('');
     const dateStr=fmtDate(j.posted_dt);
+    const checkedStr=fmtDate(j.last_checked);
     const title=j.position||j.title||j.job_title||j.role||j.name||'(No title)';
     return `<div class="job-card card-${j.category}${applied?' applied':''}${ignored?' ignored-card':''}" style="animation-delay:${delay}s" onclick="openModal('${esc(j.id)}')">
       ${applied?`<div class="applied-ribbon">Applied</div>`:''}${ignored?`<div class="ignored-ribbon">Ignored</div>`:''}
@@ -1147,6 +1148,7 @@ function render() {
       <div class="job-meta">
         <div class="meta-item"><svg class="meta-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0 9v4m-2 0h4"/></svg>${esc(j.location)}</div>
         ${dateStr?`<div class="meta-item"><svg class="meta-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>Posted ${esc(dateStr)}</div>`:''}
+        ${checkedStr?`<div class="meta-item"><svg class="meta-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9a6 6 0 1110.83-3.5"/><path d="M8 5.5V9l2 1.5"/><polyline points="11 2 14 5 11 8" stroke-width="1.4"/></svg>Checked ${esc(checkedStr)}</div>`:''}
       </div>
       ${flagsHtml?`<div class="flags-row">${flagsHtml}</div>`:''}
       ${tagsHtml||missHtml?`<div class="tags-row">${tagsHtml}${missHtml}</div>`:''}
