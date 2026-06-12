@@ -14,7 +14,7 @@ JD_MODEL         = os.getenv("JD_MODEL",        "gpt-4.1-mini-2025-04-14")   # C
 OPTIMIZER_MODEL  = os.getenv("OPTIMIZER_MODEL", "gpt-4.1-2025-04-14")       # Call 2 — surgical rewrite
 
 # ── Google Drive ─────────────────────────────────────────────────
-RESUME_FILE_ID   = os.getenv("RESUME_FILE_ID",   "12T7ATJkfnajmlZ0mVpO_6un3i7PXUYSJ")
+RESUME_FILE_ID   = os.getenv("RESUME_FILE_ID",   "1-7j-PVPeLXCvp8fTcGBoea5SRtHyLYCG")
 OUTPUT_FOLDER_ID = os.getenv("OUTPUT_FOLDER_ID",  "1Q17UTwelBtnm2_KrQZuhxGToUfUkDfCV")
 
 # ── Google Sheets ────────────────────────────────────────────────
