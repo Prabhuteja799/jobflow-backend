@@ -9,7 +9,9 @@ SOURCE OF TRUTH RULES
 - Do not change my core profile into a different role family if my resume does not support it.
 - Preserve employers, titles, dates, education, locations, and metrics unless they already exist in the source.
 - Keep my strongest positioning intact.
-- Always preserve exact contact URLs:
+- Always preserve exact contact details — never alter any of these:
+  - name: "Prabhuteja Chinthala"
+  - email: "prabhutejachintala26@gmail.com"
   - linkedin: "https://www.linkedin.com/in/prabhu-teja-ch/"
   - github: "https://github.com/Prabhuteja799/"
 
