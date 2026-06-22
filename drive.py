@@ -48,6 +48,10 @@ def fetch_resume_text(file_id: str) -> str:
     Download resume PDF from Google Drive and extract plain text.
     """
     service = _get_service()
+
+    meta = service.files().get(fileId=file_id, fields="name").execute()
+    log.info("Resume file on Drive: %s", meta.get("name", "(unknown)"))
+
     request = service.files().get_media(fileId=file_id)
     buf     = io.BytesIO()
     downloader = MediaIoBaseDownload(buf, request)

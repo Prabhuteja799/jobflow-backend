@@ -180,7 +180,7 @@ Return ONLY a valid raw JSON object. No markdown, no explanation, no preamble.
     "linkedin": "https://www.linkedin.com/in/prabhu-teja-ch/",
     "github": "https://github.com/Prabhuteja799/",
     "phone": "phone",
-    "location": "City, State"
+    "location": "Miami, FL"
   },
   "summary_heading": "PROFESSIONAL SUMMARY",
   "summary": {
